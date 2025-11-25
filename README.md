@@ -1,8 +1,7 @@
-Prueba Técnica – Ingeniería de Datos - Diego Moreno
+Prueba Técnica – Ingeniería de Datos
+Diego Moreno – Global MVM
 
-Global MVM
-
-Este proyecto desarrolla la solución completa a los desafíos planteados en la prueba técnica para Ingeniería de Datos.
+Este proyecto desarrolla la solución a los desafíos planteados en la prueba técnica para Ingeniería de Datos.
 La prueba se centra en:
 
 Generación de datos sintéticos
@@ -16,7 +15,6 @@ Modelado SQL
 Exposición mediante API REST
 
 Contenedorización (conceptual)
-
 
 Estructura del repositorio
 ├── generate_data.py
@@ -39,7 +37,7 @@ Estructura del repositorio
 
 DESAFÍO #1 – Generación automática de datos
 
-Se desarrolló un script en Python (generate_data.py) que genera automáticamente información sintética para:
+Se desarrolló un script en Python (generate_data.py) que genera información sintética para:
 
 Departamentos
 
@@ -56,7 +54,6 @@ numpy
 datetime
 
 La generación incluye IDs, nombres, rangos salariales y fechas aleatorias con reproducibilidad por semilla.
-
 
 DESAFÍO #2 – Almacenamiento en CSV y Parquet
 
@@ -75,13 +72,14 @@ jobs.parquet
 employees.parquet
 
 Elección de formatos
+
 CSV
 
-Formato universal y legible
+Legible y universal
 
-Útil para validación manual
+Fácil de validar
 
-Ideal para pruebas rápidas
+Útil para pruebas rápidas
 
 Parquet
 
@@ -89,39 +87,33 @@ Formato columnar optimizado
 
 Alto rendimiento en analítica
 
-Estándar en Data Lakes: Amazon S3, ADLS, GCS
+Eficiente en almacenamiento
 
-Ahorro en almacenamiento
-
+Estándar en Data Lakes
 
 DESAFÍO #3 – Proceso batch hacia base de datos SQL
 
-Se implementó el script batch_load_sqlite.py que:
+Script: batch_load_sqlite.py
+
+Acciones:
 
 Lee los CSV generados
 
 Crea la base SQLite hr_data.db
 
-Carga las tablas:
+Carga las tablas: departments, jobs, employees
 
-departments
+Crea índices básicos
 
-jobs
-
-employees
-
-Crea índices básicos para mejorar consultas
-
-SQLite se utiliza como ejemplo local, equivalente a un proceso batch hacia una base SQL o Data Warehouse en la nube.
-
+SQLite se utiliza como un equivalente local a una base SQL o Data Warehouse.
 
 DESAFÍO #4 – Creación de una vista SQL
 
-Se incluyó la vista:
+Se creó la vista:
 
 vw_employees_extended
 
-Que combina empleados, puestos y departamentos con campos adicionales:
+Incluye:
 
 Nombre completo
 
@@ -129,37 +121,35 @@ Detalles del puesto
 
 Ubicación del departamento
 
-Clasificación del salario (Low, Medium, High)
+Clasificación salarial: Low, Medium, High
 
-Creada mediante:
+Archivos asociados:
 
 create_view_employees_extended.sql
 
-Ejecutada desde Python con query_view_sqlite.py
+query_view_sqlite.py
 
+DESAFÍO #5 – API REST
 
-DESAFÍO #5 – API REST para exponer los datos
-
-Se implementó una API con FastAPI (api.py) que expone:
+Se implementó una API con FastAPI (api.py) con los siguientes endpoints:
 
 Endpoint	Descripción
 GET /	Información básica
-GET /employees	Lista completa de empleados
-GET /employees/{id}	Detalle por ID
+GET /employees	Lista de empleados
+GET /employees/{id}	Consulta por ID
 GET /employees/high-salary	Empleados con salario alto
 GET /departments	Lista de departamentos
 GET /jobs	Lista de puestos
 
-La API quedó disponible en local:
+Documentación automática disponible en:
 
 http://127.0.0.1:8000/docs
 
+DESAFÍO #6 – Contenedorización y prueba de consumo
 
-DESAFÍO #6 – Despliegue con contenedores (Docker) y prueba de consumo
+Aunque no fue posible ejecutar Docker localmente, se deja lista la configuración completa.
 
-Aunque en el entorno actual no fue posible ejecutar Docker localmente, se deja lista la configuración completa para el despliegue basado en contenedores siguiendo buenas prácticas.
-
-1 Archivo Dockerfile
+1. Archivo Dockerfile
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -173,26 +163,22 @@ EXPOSE 8000
 
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
 
-2 Construcción de la imagen
-
-En un entorno con Docker disponible:
-
+2. Construcción de la imagen
 docker build -t mvm-hr-api .
 
-3 Ejecución del contenedor
+3. Ejecución del contenedor
 docker run -p 8000:8000 mvm-hr-api
 
 
-La API quedaría expuesta en:
+Acceso a la API:
 
 http://127.0.0.1:8000
 
 http://127.0.0.1:8000/docs
 
+4. Despliegue en la nube (conceptual)
 
-4 Despliegue en la nube (conceptual)
-
-El contenedor puede desplegarse sin cambios en:
+El contenedor puede desplegarse en:
 
 Azure Container Apps
 
@@ -202,21 +188,21 @@ AWS ECS / Fargate
 
 Google Cloud Run
 
-Kubernetes (AKS, EKS, GKE)
+Kubernetes
 
-Pasos generales:
+Pasos:
 
-Subir imagen a un Container Registry (ACR / ECR / GCR / Docker Hub)
+Subir imagen a un Container Registry
 
 Crear un servicio de contenedor
 
 Configurar variables de entorno y puerto 8000
 
-Exponer un endpoint público o interno
+Exponer el endpoint
 
-5 Prueba de consumo
+5. Pruebas de consumo
 
-La API fue probada directamente desde Swagger (/docs) y mediante navegador con los endpoints:
+Probado correctamente con:
 
 GET /employees
 
@@ -228,4 +214,4 @@ GET /departments
 
 GET /jobs
 
-Los resultados confirman el correcto funcionamiento del modelo, la vista SQL y la API.
+Los resultados confirman el funcionamiento del modelo, la vista SQL y la API.
