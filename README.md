@@ -1,22 +1,38 @@
-Prueba Técnica – Ingeniería de Datos
-Diego Moreno – Global MVM
+# Prueba Técnica – Ingeniería de Datos  
+**Diego Moreno – Global MVM**
 
-Este proyecto desarrolla la solución a los desafíos planteados en la prueba técnica para Ingeniería de Datos.
+Este proyecto desarrolla una solución completa a los desafíos planteados en la prueba técnica para Ingeniería de Datos.  
 La prueba se centra en:
 
-Generación de datos sintéticos
+- Generación de datos sintéticos  
+- Transformación y almacenamiento  
+- Procesos batch  
+- Modelado SQL  
+- Exposición mediante API REST  
+- Contenedorización (conceptual)
 
-Transformación y almacenamiento
+---
 
-Procesos batch
+## Estructura del repositorio
 
-Modelado SQL
+# Prueba Técnica – Ingeniería de Datos  
+**Diego Moreno – Global MVM**
 
-Exposición mediante API REST
+Este proyecto desarrolla una solución completa a los desafíos planteados en la prueba técnica para Ingeniería de Datos.  
+La prueba se centra en:
 
-Contenedorización (conceptual)
+- Generación de datos sintéticos  
+- Transformación y almacenamiento  
+- Procesos batch  
+- Modelado SQL  
+- Exposición mediante API REST  
+- Contenedorización (conceptual)
 
-Estructura del repositorio
+---
+
+## Estructura del repositorio
+
+.
 ├── generate_data.py
 ├── batch_load_sqlite.py
 ├── query_view_sqlite.py
@@ -35,121 +51,118 @@ Estructura del repositorio
 ├── employees.parquet
 └── README.md
 
-DESAFÍO #1 – Generación automática de datos
+yaml
+Copiar código
 
-Se desarrolló un script en Python (generate_data.py) que genera información sintética para:
+---
 
-Departamentos
+# DESAFÍO #1 – Generación automática de datos
 
-Puestos de trabajo
+El script `generate_data.py` genera datos sintéticos para:
 
-Empleados
+- Departamentos  
+- Puestos de trabajo  
+- Empleados  
 
-Usando:
+Usando librerías:
 
-pandas
+- pandas  
+- numpy  
+- datetime  
 
-numpy
+Se generaron IDs, nombres, rangos salariales y fechas aleatorias con reproducibilidad mediante semilla.
 
-datetime
+---
 
-La generación incluye IDs, nombres, rangos salariales y fechas aleatorias con reproducibilidad por semilla.
+# DESAFÍO #2 – Almacenamiento en CSV y Parquet
 
-DESAFÍO #2 – Almacenamiento en CSV y Parquet
+Los datos se exportan a:
 
-Los datos generados se exportan a:
+**CSV**
 
-departments.csv
+- departments.csv  
+- jobs.csv  
+- employees.csv  
 
-jobs.csv
+**Parquet**
 
-employees.csv
+- departments.parquet  
+- jobs.parquet  
+- employees.parquet  
 
-departments.parquet
+**Elección de formatos**
 
-jobs.parquet
+- CSV: formato simple, universal y fácil de validar manualmente.  
+- Parquet: formato columnar, optimizado para analítica y Data Lakes (S3, ADLS, GCS).
 
-employees.parquet
+---
 
-Elección de formatos
+# DESAFÍO #3 – Proceso batch hacia base de datos SQL
 
-CSV
+El script `batch_load_sqlite.py`:
 
-Legible y universal
+- Lee los CSV generados  
+- Crea la base local `hr_data.db`  
+- Carga las tablas:
+  - departments  
+  - jobs  
+  - employees  
+- Crea índices para mejorar consultas  
 
-Fácil de validar
+SQLite se usa como ejemplo local equivalente a una carga batch hacia un Data Warehouse en la nube.
 
-Útil para pruebas rápidas
+---
 
-Parquet
-
-Formato columnar optimizado
-
-Alto rendimiento en analítica
-
-Eficiente en almacenamiento
-
-Estándar en Data Lakes
-
-DESAFÍO #3 – Proceso batch hacia base de datos SQL
-
-Script: batch_load_sqlite.py
-
-Acciones:
-
-Lee los CSV generados
-
-Crea la base SQLite hr_data.db
-
-Carga las tablas: departments, jobs, employees
-
-Crea índices básicos
-
-SQLite se utiliza como un equivalente local a una base SQL o Data Warehouse.
-
-DESAFÍO #4 – Creación de una vista SQL
+# DESAFÍO #4 – Creación de una vista SQL
 
 Se creó la vista:
 
-vw_employees_extended
+`vw_employees_extended`
 
 Incluye:
 
-Nombre completo
+- Nombre completo del empleado  
+- Puesto  
+- Departamento  
+- Ubicación  
+- Clasificación salarial (Low, Medium, High)
 
-Detalles del puesto
+Definida en:
 
-Ubicación del departamento
+`create_view_employees_extended.sql`
 
-Clasificación salarial: Low, Medium, High
+Ejecutada mediante:
 
-Archivos asociados:
+`query_view_sqlite.py`
 
-create_view_employees_extended.sql
+---
 
-query_view_sqlite.py
+# DESAFÍO #5 – API REST con FastAPI
 
-DESAFÍO #5 – API REST
+Archivo: `api.py`
 
-Se implementó una API con FastAPI (api.py) con los siguientes endpoints:
+Endpoints expuestos:
 
-Endpoint	Descripción
-GET /	Información básica
-GET /employees	Lista de empleados
-GET /employees/{id}	Consulta por ID
-GET /employees/high-salary	Empleados con salario alto
-GET /departments	Lista de departamentos
-GET /jobs	Lista de puestos
+| Método | Endpoint                 | Descripción                     |
+|--------|---------------------------|---------------------------------|
+| GET    | `/`                       | Información general             |
+| GET    | `/employees`              | Listado completo de empleados   |
+| GET    | `/employees/{id}`         | Consulta por ID                 |
+| GET    | `/employees/high-salary`  | Empleados con salario alto      |
+| GET    | `/departments`            | Lista de departamentos          |
+| GET    | `/jobs`                   | Lista de puestos                |
 
-Documentación automática disponible en:
+Documentación automática:
 
 http://127.0.0.1:8000/docs
 
-DESAFÍO #6 – Contenedorización y prueba de consumo
+---
 
-Aunque no fue posible ejecutar Docker localmente, se deja lista la configuración completa.
+# DESAFÍO #6 – Despliegue con contenedores (conceptual)
 
-1. Archivo Dockerfile
+Aunque Docker no pudo ejecutarse localmente, se dejó el Dockerfile configurado:
+
+```dockerfile
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -162,23 +175,24 @@ COPY . .
 EXPOSE 8000
 
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+Construcción de imagen (entorno con Docker):
 
-2. Construcción de la imagen
+nginx
+Copiar código
 docker build -t mvm-hr-api .
+Ejecución:
 
-3. Ejecución del contenedor
+arduino
+Copiar código
 docker run -p 8000:8000 mvm-hr-api
-
-
-Acceso a la API:
+Quedaría expuesta en:
 
 http://127.0.0.1:8000
 
 http://127.0.0.1:8000/docs
 
-4. Despliegue en la nube (conceptual)
-
-El contenedor puede desplegarse en:
+Despliegue en la nube (conceptual)
+Puede desplegarse en servicios como:
 
 Azure Container Apps
 
@@ -188,21 +202,20 @@ AWS ECS / Fargate
 
 Google Cloud Run
 
-Kubernetes
+Kubernetes (AKS, EKS, GKE)
 
-Pasos:
+Pasos generales:
 
-Subir imagen a un Container Registry
+Subir la imagen a un Container Registry
 
-Crear un servicio de contenedor
+Crear el servicio de contenedor
 
-Configurar variables de entorno y puerto 8000
+Configurar puerto 8000
 
-Exponer el endpoint
+Exponer endpoint público o interno
 
-5. Pruebas de consumo
-
-Probado correctamente con:
+Prueba de consumo
+Los endpoints fueron probados exitosamente desde Swagger y desde navegador:
 
 GET /employees
 
@@ -213,5 +226,3 @@ GET /employees/high-salary
 GET /departments
 
 GET /jobs
-
-Los resultados confirman el funcionamiento del modelo, la vista SQL y la API.
